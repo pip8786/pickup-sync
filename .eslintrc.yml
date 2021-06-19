@@ -1,0 +1,58 @@
+---
+root: true
+parser: '@typescript-eslint/parser'
+parserOptions:
+  ecmaVersion: 6
+  sourceType: module
+plugins:
+  - '@typescript-eslint'
+env:
+  node: true
+rules:
+  no-cond-assign:
+    - error
+    - except-parens
+  '@typescript-eslint/no-extra-parens':
+    - error
+    - all
+    - nestedBinaryExpressions: false
+      conditionalAssign: false
+  no-unreachable: error
+  object-curly-spacing:
+    - error
+    - never
+  semi:
+    - error
+    - always
+  quotes:
+    - error
+    - double
+    - avoidEscape: true
+  quote-props:
+    - error
+    - as-needed
+  space-before-function-paren:
+    - error
+    - never
+  func-call-spacing:
+    - error
+    - never
+  wrap-iife:
+    - error
+    - inside
+  curly: 
+    - error
+
+  '@typescript-eslint/member-delimiter-style':
+    - error
+    - multiline:
+        delimiter: none
+        requireLast: true
+      singleline:
+        delimiter: comma
+        requireLast: false
+  '@typescript-eslint/prefer-optional-chain':
+    - error
+  no-restricted-imports:
+    - error
+    - patterns: ["*/src/*","*/dist/*"]
