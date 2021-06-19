@@ -15,6 +15,22 @@ export async function getCurrentPlayers():Promise<PlayerRow[]> {
 		[1, "2021-06-08"]);
 	return rows as PlayerRow[];
 }
+
+export async function getCurrentComments():Promise<CommentRow[]> {
+	const connection = await getConnection();
+	const [rows, fields] = await connection.execute("SELECT c.*, p.nickname FROM COMMENT c JOIN PROFILE p on c.userid = p.userid WHERE c.sportid=? AND c.date=? ORDER BY c.time",[1, "2021-06-08"]);
+	return rows as CommentRow[];
+}
+
+export interface CommentRow {
+	id: number;
+	sportid: number;
+	userid: string;
+	date: string;
+	time: string;
+	comment: string;
+}
+
 export interface PlayerRow {
 	id: number;
 	userid: string;
