@@ -1,20 +1,19 @@
+import creds from "./config/pickup-sync.json";
 import {GoogleSpreadsheet} from "google-spreadsheet";
+import {cleanup} from "./db";
+import {getCurrentPlayers} from "./pickup";
 
-const doc = new GoogleSpreadsheet("116AOmReGPhbloSp5yHLzJ2HbytOIiW6162CC_Vi1ZNs");
+(async function() {
+    const doc = new GoogleSpreadsheet("116AOmReGPhbloSp5yHLzJ2HbytOIiW6162CC_Vi1ZNs");
+    await doc.useServiceAccountAuth(creds);
+    await doc.loadInfo(); // loads document properties and worksheets
 
-await doc.useServiceAccountAuth({
-    client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-    private_key: process.env.GOOGLE_PRIVATE_KEY,
-});
+    const sheet = doc.sheetsByTitle["Players"];
+    await sheet.clear();
+    await sheet.setHeaderRow(["Nickname", "Location", "Status"]);
+    const players = await getCurrentPlayers();
+    const rows = players.map(p => [p.nickname, p.location, p.status]);
+    await sheet.addRows(rows);
+    cleanup();
+}());
 
-await doc.loadInfo(); // loads document properties and worksheets
-console.log(doc.title);
-await doc.updateProperties({ title: 'renamed doc' });
-
-const sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id] or doc.sheetsByTitle[title]
-console.log(sheet.title);
-console.log(sheet.rowCount);
-
-// adding / removing sheets
-const newSheet = await doc.addSheet({ title: 'hot new sheet!' });
-await newSheet.delete();
