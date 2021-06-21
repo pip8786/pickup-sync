@@ -1,6 +1,6 @@
 import {getConnection} from "./db";
 
-export async function getCurrentPlayers():Promise<PlayerRow[]> {
+export async function getCurrentPlayers(dateString:string):Promise<PlayerRow[]> {
 	const connection = await getConnection();
 	const [rows,fields] = await connection.execute(
 		"SELECT p.id, p.userid, p.date, p.timestamp, p.timeid, p.locationid, p.guests, l.location, t.time, n.nickname, n.status " +
@@ -12,13 +12,13 @@ export async function getCurrentPlayers():Promise<PlayerRow[]> {
 		"WHERE " +
 		"    p.sportid=? and date=? " +
 		"ORDER BY p.location, p.time, p.id ",
-		[1, "2021-06-08"]);
+		[1, dateString]);
 	return rows as PlayerRow[];
 }
 
-export async function getCurrentComments():Promise<CommentRow[]> {
+export async function getCurrentComments(dateString:string):Promise<CommentRow[]> {
 	const connection = await getConnection();
-	const [rows, fields] = await connection.execute("SELECT c.*, p.nickname FROM COMMENT c JOIN PROFILE p on c.userid = p.userid WHERE c.sportid=? AND c.date=? ORDER BY c.time",[1, "2021-06-08"]);
+	const [rows, fields] = await connection.execute("SELECT c.*, p.nickname FROM COMMENT c JOIN PROFILE p on c.userid = p.userid WHERE c.sportid=? AND c.date=? ORDER BY c.time",[1, dateString]);
 	return rows as CommentRow[];
 }
 

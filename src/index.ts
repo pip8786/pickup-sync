@@ -1,19 +1,28 @@
 import creds from "./config/pickup-sync.json";
 import {GoogleSpreadsheet} from "google-spreadsheet";
-import {cleanup} from "./db";
 import {getCurrentComments, getCurrentPlayers} from "./pickup";
 
-(async function() {
+const syncTimeInSeconds = 120;
+
+main();
+
+async function main() {
+    console.clear();
+    console.log("Fetching players and syncing to spreadsheet...");
     const doc = new GoogleSpreadsheet("116AOmReGPhbloSp5yHLzJ2HbytOIiW6162CC_Vi1ZNs");
     await doc.useServiceAccountAuth(creds);
     await doc.loadInfo(); // loads document properties and worksheets
 
+    const today = new Date();
+    const month = `${(today.getMonth()+1)}`.padStart(2,'0');
+    const todayString = `${today.getFullYear()}-${month}-${today.getDate()}`;
     const sheet = doc.sheetsByTitle["Players"];
     await sheet.clear();
     await sheet.setHeaderRow(["User ID", "Nickname", "Location", "Guests", "Status"]);
-    const players = await getCurrentPlayers();
+    const players = await getCurrentPlayers(todayString);
     const rows = players.map(p => [p.userid, p.nickname, p.location, p.guests, p.status]);
     await sheet.addRows(rows);
+    console.log(`Syncing ${rows.length} players.`);
     await sheet.loadCells("G1:G2");
     const countCell = sheet.getCell(1, 6);
     countCell.formula = "=COUNTA(A2:A)+SUM(D2:D)";
@@ -26,10 +35,10 @@ import {getCurrentComments, getCurrentPlayers} from "./pickup";
     const commentSheet = doc.sheetsByTitle["Comments"];
     await commentSheet.clear();
     await commentSheet.setHeaderRow(["User ID", "Time", "Comment"]);
-    const comments = await getCurrentComments();
+    const comments = await getCurrentComments(todayString);
     const commentRows = comments.map(c => [c.userid, c.time, c.comment]);
     await commentSheet.addRows(commentRows);
-
-    cleanup();
-}());
+    console.log(`Syncing ${commentRows.length} comments.`);
+    setTimeout(main, syncTimeInSeconds*1000);
+}
 
