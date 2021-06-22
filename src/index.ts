@@ -1,10 +1,13 @@
 import creds from "./config/pickup-sync.json";
 import {GoogleSpreadsheet} from "google-spreadsheet";
+import {schedule} from  "node-cron";
 import {getCurrentComments, getCurrentPlayers} from "./pickup";
 
 const syncTimeInSeconds = 120;
 
-main();
+const job = schedule("*/2 7-13 * * 1,2,3,4,5",main);
+
+job.start();
 
 async function main() {
     console.clear();
