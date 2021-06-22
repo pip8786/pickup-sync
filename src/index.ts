@@ -3,9 +3,7 @@ import {GoogleSpreadsheet} from "google-spreadsheet";
 import {schedule} from  "node-cron";
 import {getCurrentComments, getCurrentPlayers} from "./pickup";
 
-const syncTimeInSeconds = 120;
-
-const job = schedule("*/2 7-13 * * 1,2,3,4,5",main);
+const job = schedule("*/2 7-12 * * 1,2,3,4,5",main);
 
 job.start();
 
@@ -42,6 +40,5 @@ async function main() {
     const commentRows = comments.map(c => [c.userid, c.time, c.comment]);
     await commentSheet.addRows(commentRows);
     console.log(`Syncing ${commentRows.length} comments.`);
-    setTimeout(main, syncTimeInSeconds*1000);
 }
 
