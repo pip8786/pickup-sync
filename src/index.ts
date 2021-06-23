@@ -22,7 +22,7 @@ async function main() {
     await sheet.setHeaderRow(["User ID", "Nickname", "Location", "Guests", "Status"]);
     const players = await getCurrentPlayers(todayString);
     const rows = players.map(p => [p.userid, p.nickname, p.location, p.guests, p.status]);
-    await sheet.addRows(rows);
+    await sheet.addRows(rows, {insert: false, raw:true});
     console.log(`Syncing ${rows.length} players.`);
     await sheet.loadCells("G1:G2");
     const countCell = sheet.getCell(1, 6);
