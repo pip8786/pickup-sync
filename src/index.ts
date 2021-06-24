@@ -4,12 +4,13 @@ import {schedule} from  "node-cron";
 import {getCurrentComments, getCurrentPlayers} from "./pickup";
 
 const job = schedule("*/2 7-12 * * 1,2,3,4,5",main);
-
+//call once to start.
+main();
 job.start();
 
 async function main() {
     console.clear();
-    console.log("Fetching players and syncing to spreadsheet...");
+    console.log("Fetching players and syncing to spreadsheet...", new Date().toLocaleTimeString());
     const doc = new GoogleSpreadsheet("116AOmReGPhbloSp5yHLzJ2HbytOIiW6162CC_Vi1ZNs");
     await doc.useServiceAccountAuth(creds);
     await doc.loadInfo(); // loads document properties and worksheets
