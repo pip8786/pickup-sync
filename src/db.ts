@@ -1,7 +1,7 @@
 import creds from "./config/db.json";
 import mysql, {Connection} from "mysql2/promise";
 
-let conn:Connection;
+let conn:Connection|undefined;
 
 export async function getConnection():Promise<Connection> {
 	if(conn === undefined) {
@@ -17,5 +17,6 @@ export async function getConnection():Promise<Connection> {
 }
 
 export function cleanup() {
-	conn.destroy();
+	conn?.destroy();
+	conn = undefined;
 }

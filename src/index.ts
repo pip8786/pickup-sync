@@ -2,6 +2,7 @@ import creds from "./config/pickup-sync.json";
 import {GoogleSpreadsheet} from "google-spreadsheet";
 import {schedule} from  "node-cron";
 import {getCurrentComments, getCurrentPlayers} from "./pickup";
+import {cleanup} from "./db";
 
 const job = schedule("*/2 7-12 * * 1,2,3,4,5",main);
 //call once to start.
@@ -41,5 +42,6 @@ async function main() {
     const commentRows = comments.map(c => [c.userid, c.time, c.comment]);
     await commentSheet.addRows(commentRows);
     console.log(`Syncing ${commentRows.length} comments.`);
+    cleanup();
 }
 
