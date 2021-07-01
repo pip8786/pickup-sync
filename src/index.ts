@@ -17,8 +17,9 @@ async function main() {
     await doc.loadInfo(); // loads document properties and worksheets
 
     const today = new Date();
-    const month = `${(today.getMonth()+1)}`.padStart(2,'0');
-    const todayString = `${today.getFullYear()}-${month}-${today.getDate()}`;
+    const month = `${today.getMonth()+1}`.padStart(2,'0');
+    const day = `${today.getDate()}`.padStart(2,'0');
+    const todayString = `${today.getFullYear()}-${month}-${day}`;
     const sheet = doc.sheetsByTitle["Players"];
     await sheet.clear();
     await sheet.setHeaderRow(["User ID", "Nickname", "Location", "Guests", "Status"]);
