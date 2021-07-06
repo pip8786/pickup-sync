@@ -11,6 +11,7 @@ export async function getCurrentPlayers(dateString:string):Promise<PlayerRow[]> 
 		"        JOIN LOCATION l ON l.id = p.locationid " +
 		"WHERE " +
 		"    p.sportid=? and date=? " +
+		"GROUP BY p.userid " +
 		"ORDER BY p.location, p.time, p.id ",
 		[1, dateString]);
 	return rows as PlayerRow[];
