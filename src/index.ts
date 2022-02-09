@@ -27,7 +27,7 @@ async function main() {
     const rows = players.map(p => [p.userid, p.nickname, p.location, p.guests, p.status]);
     await sheet.addRows(rows, {insert: false, raw:true});
     console.log(`Syncing ${rows.length} players.`);
-    await sheet.loadCells("G1:G2");
+    await sheet.loadCells("G1:G5");
     const countCell = sheet.getCell(1, 6);
     countCell.formula = "=COUNTA(A2:A)+SUM(D2:D)";
     await countCell.save();
@@ -35,6 +35,13 @@ async function main() {
     const countTitle = sheet.getCell(0, 6);
     countTitle.value = "Count";
     await countTitle.save();
+
+    const timeTitle = sheet.getCell(3, 6);
+    timeTitle.value = "Updated At";
+    await timeTitle.save();
+    const timeCell = sheet.getCell(4, 6);
+    timeCell.value = today.toLocaleString();
+    await timeCell.save();
 
     const commentSheet = doc.sheetsByTitle["Comments"];
     await commentSheet.clear();
