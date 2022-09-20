@@ -94,15 +94,9 @@ async function clearGuests() {
     const rows = await guestSheet.getRows();
     for(const row of rows) {
         if(row.rowIndex === 0) continue;
-        row['User Id'] = "";
-        row['In/Out'] = "";
-        row['Nickname'] = "";
+        row['In/Out'] = "Out";
         row['Status'] = "";
-        try{
-            await row.save();
-        } catch (e) {
-            //expected error when we save an empty row
-        }
+        await row.save();
     }
 }
 
