@@ -10,7 +10,8 @@ export async function getConnection():Promise<Connection> {
 			user: creds.username,
 			database: creds.dbname,
 			password: creds.password,
-			port: creds.port
+			port: creds.port,
+			namedPlaceholders: true
 		});
 	}
 	return conn;
