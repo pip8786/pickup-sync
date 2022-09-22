@@ -18,6 +18,7 @@ export async function getConnection():Promise<Connection> {
 }
 
 export function cleanup() {
+	console.log("Cleaning up database connection.");
 	conn?.destroy();
 	conn = undefined;
 }

@@ -42,6 +42,7 @@ async function main() {
     };
 
     const sheet = doc.sheetsByTitle["Players"];
+    await sheet.loadCells("G1:G5");
 
     if(JSON.stringify(newCache) !== JSON.stringify(cache)) {
         //Sync to the sheet if needed
@@ -51,7 +52,6 @@ async function main() {
         const rows = players.map(p => [p.userid, p.nickname, p.location, p.guests, p.status]);
         await sheet.addRows(rows, {insert: false, raw:true});
         console.log(`Syncing ${rows.length} players.`);
-        await sheet.loadCells("G1:G5");
         const countCell = sheet.getCell(1, 6);
         countCell.formula = "=COUNTA(A2:A)+SUM(D2:D)";
         await countCell.save();
@@ -69,9 +69,10 @@ async function main() {
         console.log(`Syncing ${commentRows.length} comments.`);
         cache = newCache;
     } else {
-        console.log(`Caches matched. Not doing any more sheet work.`);
+        console.log(`Caches matched. Won't reset the sheets.`);
     }
 
+    console.log(`Setting updated at to ${today.toLocaleString()}`)
     //Set the updated at no matter what
     const timeTitle = sheet.getCell(3, 6);
     timeTitle.value = "Updated At";
@@ -79,7 +80,6 @@ async function main() {
     const timeCell = sheet.getCell(4, 6);
     timeCell.value = today.toLocaleString();
     await timeCell.save();
-
     cleanup();
 }
 
