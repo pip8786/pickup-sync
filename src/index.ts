@@ -3,6 +3,7 @@ import {GoogleSpreadsheet} from "google-spreadsheet";
 import {schedule} from  "node-cron";
 import {getCurrentComments, getCurrentPlayers, syncPlayers} from "./pickup";
 import {cleanup} from "./db";
+import {CurrentConfig} from "./config";
 
 //Main sync
 schedule("*/2 7-12 * * 1,2,3,4,5",main);
@@ -16,7 +17,7 @@ let cache = {};
 async function main() {
     console.clear();
     console.log("Fetching players and syncing to spreadsheet...", new Date().toLocaleTimeString());
-    const doc = new GoogleSpreadsheet("116AOmReGPhbloSp5yHLzJ2HbytOIiW6162CC_Vi1ZNs");
+    const doc = new GoogleSpreadsheet(CurrentConfig.spreadsheetId);
     await doc.useServiceAccountAuth(creds);
     await doc.loadInfo(); // loads document properties and worksheets
 
